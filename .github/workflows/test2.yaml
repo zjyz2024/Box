@@ -1,0 +1,42 @@
+name: Android CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk  # GitHub Actions 内置 Android SDK 路径
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Generate local.properties
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+      - name: Build APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --build-cache --parallel --warning-mode all
+
+      - name: Find and collect APKs
+        run: |
+          mkdir -p apk_output
+          find . -path '*/build/outputs/apk/*/*.apk' -exec cp --parents {} apk_output \;
+
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: TVBox-Builds
+          path: |
+            apk_output/**/*.apk
