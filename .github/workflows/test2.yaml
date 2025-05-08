@@ -27,7 +27,9 @@ jobs:
       - name: Build APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleRelease --build-cache --parallel --warning-mode all
+          ./gradlew clean
+          ./gradlew assembleX64GenericPythonRelease --configure-on-demand 
+          # 显式指定目标变体
 
       - name: Find and collect APKs
         run: |
