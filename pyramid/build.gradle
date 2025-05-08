@@ -78,6 +78,13 @@ android {
         }
     }
 
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+        if (names.contains("python") && !names.contains("x64")) {
+            setIgnore(true) // 当python模式存在时，必须包含x64
+        }
+    }
+        
     buildTypes {
         release {
             minifyEnabled false
