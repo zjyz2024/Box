@@ -28,6 +28,8 @@ android {
     flavorDimensions += ["abi", "brand", "mode"]
 
     productFlavors {
+        productFlavors {
+        // 修改点1：扩展ABI支持架构
         armeabi {
             dimension = "abi"
             ndk {
@@ -51,6 +53,28 @@ android {
             ndk {
                 abiFilters 'x86_64'      // x86_64
             }
+        }
+
+        generic  {
+            //通用版本
+            dimension = "brand"
+        }
+
+        hisense {
+            //海信的
+            applicationId 'com.github.hisense.osc.tk'
+            dimension = "brand"
+        }
+        normal {
+            dimension = "mode"
+            minSdkVersion 21
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        python {
+            dimension = "mode"
+            minSdkVersion 21
+            // Python 版本需要额外的 Proguard 规则
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-python.pro'
         }
     }
 
